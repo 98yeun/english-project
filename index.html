@@ -1,41 +1,109 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Claire English Coach</title>
-<link rel="manifest" href="manifest.json">
-<style>
-body { font-family: -apple-system, sans-serif; padding:20px; background:#f5f5f5; }
-.card { background:white; padding:20px; border-radius:16px; margin-bottom:16px; }
-button { padding:12px 18px; border:none; border-radius:12px; background:#007AFF; color:white; }
-textarea { width:100%; height:120px; border-radius:12px; padding:10px; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Claire English Coach</title>
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="theme-color" content="#0b6ed0"/>
+  <link rel="apple-touch-icon" href="icon-192.png"/>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<h1>Claire English Coach</h1>
+  <div class="app">
+    <header>
+      <h1>Claire English Coach</h1>
+      <p>GPT 영어공부 · 쉐도잉 · 문제답변 · 퀴즈</p>
+    </header>
 
-<div class="card">
-<h2>문제 답변</h2>
-<p>영어 답변 작성 후 GPT 피드백</p>
-<textarea placeholder="Write your answer..."></textarea><br><br>
-<button onclick="alert('GPT feedback demo')">AI 피드백</button>
-<button onclick="speakSentence()">문장 듣기</button>
-<button onclick="startRecord()">녹음</button>
-</div>
+    <section class="card key-card">
+      <div class="section-title">🔑 OpenAI API 키</div>
+      <p class="muted">OpenAI API 키를 저장하면 GPT, TTS, 음성인식 기능을 사용할 수 있어요.</p>
+      <div class="row">
+        <input id="apiKeyInput" type="password" placeholder="sk-..." autocomplete="off"/>
+        <button id="saveKeyBtn">저장</button>
+      </div>
+      <p id="keyStatus" class="success hidden">저장됐어요! GPT 기능을 사용할 수 있어요.</p>
+    </section>
 
-<script>
-function speakSentence() {
-  const utterance = new SpeechSynthesisUtterance(
-    "I use AI tools a lot because they help me create documents easily."
-  );
-  utterance.lang = "en-US";
-  speechSynthesis.speak(utterance);
-}
+    <main>
+      <section id="tab-calendar" class="tab-panel active">
+        <div class="card">
+          <div class="section-title">📅 학습 달력</div>
+          <div id="calendar" class="calendar"></div>
+        </div>
+        <div class="card">
+          <div class="section-title">오늘 학습 기록</div>
+          <div id="todayLog" class="log-box empty">아직 기록이 없어요.</div>
+        </div>
+      </section>
 
-async function startRecord() {
-  alert("발음 피드백 기능 연결 예시입니다.");
-}
-</script>
+      <section id="tab-shadowing" class="tab-panel">
+        <div class="card">
+          <div class="section-title">🎙️ 쉐도잉 지문</div>
+          <p class="muted">영어 지문을 붙여넣거나 이미지 파일을 올려 텍스트를 추출하세요.</p>
+          <textarea id="shadowText" placeholder="쉐도잉할 영어 지문을 입력하세요."></textarea>
+          <div class="btn-grid">
+            <label class="file-btn">
+              파일 선택
+              <input id="shadowFile" type="file" accept="image/*,.txt,.pdf"/>
+            </label>
+            <button id="extractShadowBtn">GPT로 텍스트 추출</button>
+            <button id="saveShadowBtn">지문 저장</button>
+          </div>
+          <div id="shadowStatus" class="status"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">듣고 따라하기</div>
+          <p class="muted">아래 문장을 GPT 음성으로 듣고 따라 읽은 뒤 발음 피드백을 받으세요.</p>
+          <div id="sentenceList" class="sentence-list"></div>
+          <div class="btn-grid">
+            <button id="splitSentencesBtn">문장 나누기</button>
+            <button id="playAllBtn">전체 듣기</button>
+            <button id="recordShadowBtn">녹음 시작</button>
+            <button id="stopShadowBtn" disabled>녹음 종료</button>
+          </div>
+          <div id="shadowFeedback" class="feedback hidden"></div>
+        </div>
+      </section>
+
+      <section id="tab-qa" class="tab-panel">
+        <div class="card">
+          <div class="section-title">💬 문제 업로드</div>
+          <p class="muted">Warm-up / Discussion 문제 이미지나 텍스트를 올리면 GPT가 질문을 추출해요.</p>
+          <textarea id="questionRaw" placeholder="질문을 직접 입력해도 됩니다. 한 줄에 한 문제씩 입력하세요."></textarea>
+          <div class="btn-grid">
+            <label class="file-btn">
+              문제 파일 선택
+              <input id="qaFile" type="file" accept="image/*,.txt,.pdf"/>
+            </label>
+            <button id="extractQuestionsBtn">질문 추출</button>
+            <button id="makeQuestionCardsBtn">문제 만들기</button>
+          </div>
+          <div id="qaStatus" class="status"></div>
+        </div>
+        <div id="qaList"></div>
+      </section>
+
+      <section id="tab-quiz" class="tab-panel">
+        <div class="card">
+          <div class="section-title">🧩 퀴즈</div>
+          <p class="muted">저장된 쉐도잉 지문과 문제답변 내용을 바탕으로 GPT가 퀴즈를 만듭니다.</p>
+          <button id="generateQuizBtn">GPT 퀴즈 생성</button>
+          <div id="quizList" class="quiz-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button data-tab="calendar" class="active">📅<span>달력</span></button>
+      <button data-tab="shadowing">🎙️<span>쉐도잉</span></button>
+      <button data-tab="qa">💬<span>문제답변</span></button>
+      <button data-tab="quiz">🧩<span>퀴즈</span></button>
+    </nav>
+  </div>
+
+  <script src="app.js"></script>
 </body>
 </html>
