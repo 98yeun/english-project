@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claire English Coach</title>
+<link rel="manifest" href="manifest.json">
+<style>
+body { font-family: -apple-system, sans-serif; padding:20px; background:#f5f5f5; }
+.card { background:white; padding:20px; border-radius:16px; margin-bottom:16px; }
+button { padding:12px 18px; border:none; border-radius:12px; background:#007AFF; color:white; }
+textarea { width:100%; height:120px; border-radius:12px; padding:10px; }
+</style>
+</head>
+<body>
+<h1>Claire English Coach</h1>
+
+<div class="card">
+<h2>문제 답변</h2>
+<p>영어 답변 작성 후 GPT 피드백</p>
+<textarea placeholder="Write your answer..."></textarea><br><br>
+<button onclick="alert('GPT feedback demo')">AI 피드백</button>
+<button onclick="speakSentence()">문장 듣기</button>
+<button onclick="startRecord()">녹음</button>
+</div>
+
+<script>
+function speakSentence() {
+  const utterance = new SpeechSynthesisUtterance(
+    "I use AI tools a lot because they help me create documents easily."
+  );
+  utterance.lang = "en-US";
+  speechSynthesis.speak(utterance);
+}
+
+async function startRecord() {
+  alert("발음 피드백 기능 연결 예시입니다.");
+}
+</script>
+</body>
+</html>

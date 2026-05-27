@@ -1,0 +1,8 @@
+{
+  "name": "Claire English Coach",
+  "short_name": "EnglishCoach",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#007AFF"
+}
